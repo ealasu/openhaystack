@@ -84,39 +84,39 @@ if [[ ! -e "$PORT" ]]; then
 fi
 
 # Setup the virtual environment
-if [[ ! -d "$VENV_DIR" ]]; then
-    # Create the virtual environment
-    PYTHON="$(which python3)"
-    if [[ -z "$PYTHON" ]]; then
-        PYTHON="$(which python)"
-    fi
-    if [[ -z "$PYTHON" ]]; then
-        echo "Could not find a Python installation, please install Python 3."
-        exit 1
-    fi
-    if ! ($PYTHON -V 2>&1 | grep "Python 3" > /dev/null); then
-        echo "Executing \"$PYTHON\" does not run Python 3, please make sure that python3 or python on your PATH points to Python 3"
-        exit 1
-    fi
-    if ! ($PYTHON -c "import venv" &> /dev/null); then
-        echo "Python 3 module \"venv\" was not found."
-        exit 1
-    fi
-    $PYTHON -m venv "$VENV_DIR"
-    if [[ $? != 0 ]]; then
-        echo "Creating the virtual environment in $VENV_DIR failed."
-        exit 1
-    fi
-    source "$VENV_DIR/bin/activate"
-    pip install --upgrade pip
-    pip install esptool
-    if [[ $? != 0 ]]; then
-        echo "Could not install Python 3 module esptool in $VENV_DIR";
-        exit 1
-    fi
-else
-    source "$VENV_DIR/bin/activate"
-fi
+#if [[ ! -d "$VENV_DIR" ]]; then
+    ## Create the virtual environment
+    #PYTHON="$(which python3)"
+    #if [[ -z "$PYTHON" ]]; then
+        #PYTHON="$(which python)"
+    #fi
+    #if [[ -z "$PYTHON" ]]; then
+        #echo "Could not find a Python installation, please install Python 3."
+        #exit 1
+    #fi
+    #if ! ($PYTHON -V 2>&1 | grep "Python 3" > /dev/null); then
+        #echo "Executing \"$PYTHON\" does not run Python 3, please make sure that python3 or python on your PATH points to Python 3"
+        #exit 1
+    #fi
+    #if ! ($PYTHON -c "import venv" &> /dev/null); then
+        #echo "Python 3 module \"venv\" was not found."
+        #exit 1
+    #fi
+    #$PYTHON -m venv "$VENV_DIR"
+    #if [[ $? != 0 ]]; then
+        #echo "Creating the virtual environment in $VENV_DIR failed."
+        #exit 1
+    #fi
+    #source "$VENV_DIR/bin/activate"
+    #pip install --upgrade pip
+    #pip install esptool
+    #if [[ $? != 0 ]]; then
+        #echo "Could not install Python 3 module esptool in $VENV_DIR";
+        #exit 1
+    #fi
+#else
+    #source "$VENV_DIR/bin/activate"
+#fi
 
 # Prepare the key
 KEYFILE="$SCRIPT_DIR/tmp.key"
