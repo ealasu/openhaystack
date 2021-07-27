@@ -12,11 +12,7 @@
 
 #import <Accounts/Accounts.h>
 
-#ifdef SERVER
-#import "OpenHaystackServer-Swift.h"
-#else
 #import "OpenHaystack-Swift.h"
-#endif
 
 @implementation ReportsFetcher
 

@@ -16,9 +16,6 @@ class FindMyController: ObservableObject {
     @Published var error: Error?
     @Published var devices = [FindMyDevice]()
 
-    /// If we use an intermediate server for fetching reports its URL has to be stored here
-    var serverURL: URL?
-
     func loadPrivateKeys(from data: Data, with searchPartyToken: Data, completion: @escaping (Error?) -> Void) {
         do {
             let devices = try PropertyListDecoder().decode([FindMyDevice].self, from: data)
@@ -244,6 +241,4 @@ class FindMyController: ObservableObject {
 enum FindMyErrors: Error {
     case decodingPlistFailed(message: String)
     case objectReleased
-    case noServerURL
-    case serverError(message: String)
 }
