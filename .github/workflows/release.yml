@@ -53,6 +53,60 @@ jobs:
           path: "${{ env.PROJECT_DIR }}/OpenHaystack/HaystackApp/Firmwares/ESP32"
       - name: "Archive project"
         run: xcodebuild archive -scheme ${APP} -configuration release -archivePath ${APP}.xcarchive
+      #- name: "Archive project - server"
+        #run: xcodebuild archive -scheme ${APP}Server -configuration release -archivePath ${APP}Server.xcarchive
+      - name: "Create ZIP"
+        run: |
+          pushd ${APP}.xcarchive/Products/Applications
+          zip -r ../../../${APP}.zip ${APP}.app
+          zip -r ../../../${APP}.zip ${APP}Server.app
+          popd
+      - name: "Create release"
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: "Upload release asset"
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.PROJECT_DIR }}/${{ env.APP }}.zip
+          asset_name: ${{ env.APP }}.zip
+          asset_content_type: application/zip
+
+  build-and-release-server:
+    name: "Create release on GitHub - server"
+    runs-on: macos-latest
+    env:
+      APP: OpenHaystackServer
+      PROJECT_DIR: OpenHaystack
+    defaults:
+      run:
+        working-directory: ${{ env.PROJECT_DIR }}
+    needs:
+      - build-firmware-esp32
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: "Select Xcode 12"
+        uses: devbotsxyz/xcode-select@v1
+        with:
+          version: "12"
+      - name: "Add ESP32 firmware"
+        uses: actions/download-artifact@v2
+        with:
+          name: firmware-esp32
+          path: "${{ env.PROJECT_DIR }}/OpenHaystack/HaystackApp/Firmwares/ESP32"
+      - name: "Archive project"
+        run: xcodebuild archive -scheme ${APP} -configuration release -archivePath ${APP}.xcarchive
       - name: "Create ZIP"
         run: |
           pushd ${APP}.xcarchive/Products/Applications
